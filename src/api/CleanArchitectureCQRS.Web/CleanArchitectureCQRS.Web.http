@@ -1,0 +1,6 @@
+@CleanArchitectureCQRS.Web_HostAddress = http://localhost:5210
+
+GET {{CleanArchitectureCQRS.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
