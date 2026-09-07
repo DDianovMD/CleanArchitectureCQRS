@@ -1,24 +1,53 @@
-using CleanArchitectureCQRS.Domain.Entities;
+using CleanArchitectureCQRS.Application.UseCases.Employee.Commands;
+using CleanArchitectureCQRS.Application.UseCases.Employee.Queries;
+using CleanArchitectureCQRS.Application.UseCases.Employee.Queries.DTOs;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitectureCQRS.Web.Controllers
+namespace CleanArchitectureCQRS.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class EmployeeController : ControllerBase
+    [Route("api/[controller]")]
+    public class EmployeeController(IMediator mediator, ILogger<EmployeeController> logger) : ControllerBase
     {
-        private readonly ILogger<EmployeeController> _logger;
-
-        public EmployeeController(ILogger<EmployeeController> logger)
-        {
-            _logger = logger;
-        }
+        private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        private readonly ILogger<EmployeeController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         [HttpGet]
-        [Route("/")]
-        public IActionResult GetEmployees()
+        public async Task<IActionResult> GetEmployees(CancellationToken ct)
         {
-            return Ok();
+            var response = await _mediator.Send(new GetAllEmployeesQuery(), ct);
+            return Ok(response);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEmployee(Guid id, CancellationToken ct)
+        {
+            var query = new GetEmployeeByIdQuery(id);
+            EmployeeDto response = await _mediator.Send(query, ct);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEmployee(CreateEmployeeCommand request, CancellationToken ct)
+        {
+            var employeeId = await _mediator.Send(request, ct);
+            return CreatedAtAction(nameof(GetEmployee), new { id = employeeId }, null);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> CreateEmployee(UpdateEmployeeCommand request, CancellationToken ct)
+        {
+            await _mediator.Send(request, ct);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEmployee(Guid id, CancellationToken ct)
+        {
+            var command = new DeleteEmployeeCommand(id);
+            await _mediator.Send(command, ct);
+            return NoContent();
         }
     }
 }

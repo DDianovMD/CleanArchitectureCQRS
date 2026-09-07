@@ -6,10 +6,11 @@ namespace CleanArchitectureCQRS.Infrastructure.Persistence.Repositories
 {
     public class EmployeeRepository(AppDbContext dbContext) : IEmployeeRepository
     {
-        public async Task AddAsync(Employee employee)
+        public async Task<Guid> AddAsync(Employee employee)
         {
-            await dbContext.Employees.AddAsync(employee);
+            var result = await dbContext.Employees.AddAsync(employee);
             await dbContext.SaveChangesAsync();
+            return result.Entity.Id;
         }
 
         public async Task DeleteAsync(Guid id, string user)

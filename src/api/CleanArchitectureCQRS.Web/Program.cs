@@ -1,6 +1,9 @@
 
 using CleanArchitectureCQRS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitectureCQRS.Application.UseCases.Employee.Handlers;
+using CleanArchitectureCQRS.Domain.Abstractions.Repositories;
+using CleanArchitectureCQRS.Infrastructure.Persistence.Repositories;
 
 namespace CleanArchitectureCQRS.WebAPI
 {
@@ -17,6 +20,16 @@ namespace CleanArchitectureCQRS.WebAPI
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
             #endregion
+
+            #region MediatR configuration
+            // Register MediatR - scans the current assembly for handlers
+            builder.Services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(typeof(CreateEmployeeHandler).Assembly);
+            });
+            #endregion
+
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             // Add services to the container.
 
