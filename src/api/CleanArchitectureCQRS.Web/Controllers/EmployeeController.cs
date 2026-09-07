@@ -18,25 +18,7 @@ namespace CleanArchitectureCQRS.Web.Controllers
         [Route("/")]
         public IActionResult GetEmployees()
         {
-            List<Employee> employees = new()
-            { 
-                new()
-                {
-                    Id = Guid.NewGuid(),
-                    FirstName = "John",
-                    LastName = "Doe",
-                    Address = "Sofia, Bulgaria",
-                },
-                new()
-                {
-                    Id = Guid.NewGuid(),
-                    FirstName = "Jane",
-                    LastName = "Doe",
-                    Address = "Ruse, Bulgaria",
-                }
-            };
-
-            return Ok(employees);
+            return Ok();
         }
     }
 }
