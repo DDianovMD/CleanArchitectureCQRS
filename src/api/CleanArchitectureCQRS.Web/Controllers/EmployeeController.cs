@@ -2,18 +2,21 @@ using CleanArchitectureCQRS.Application.UseCases.Employee.Commands;
 using CleanArchitectureCQRS.Application.UseCases.Employee.Queries;
 using CleanArchitectureCQRS.Application.UseCases.Employee.Queries.DTOs;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitectureCQRS.WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "admin")]
     public class EmployeeController(IMediator mediator, ILogger<EmployeeController> logger) : ControllerBase
     {
         private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         private readonly ILogger<EmployeeController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetEmployees(CancellationToken ct)
         {
             var response = await _mediator.Send(new GetAllEmployeesQuery(), ct);
@@ -21,6 +24,7 @@ namespace CleanArchitectureCQRS.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetEmployee(Guid id, CancellationToken ct)
         {
             var query = new GetEmployeeByIdQuery(id);

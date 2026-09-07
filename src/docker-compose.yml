@@ -20,6 +20,18 @@ services:
         ports:
             - "3307:3306"
 
+    keycloak:
+        image: quay.io/keycloak/keycloak:latest
+        container_name: keycloak_dev
+        command: start-dev
+        environment:
+            - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+            - KC_BOOTSTRAP_ADMIN_PASSWORD=admin # these credentials are for development purposes only, change them before deploying to production.
+        networks:
+            - backend
+        ports:
+            - "8888:8080"
+
 volumes:
     clean_architecture_demo_data:
         name: clean_architecture_demo_data
