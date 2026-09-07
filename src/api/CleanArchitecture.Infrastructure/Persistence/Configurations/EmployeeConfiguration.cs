@@ -55,6 +55,8 @@ namespace CleanArchitectureCQRS.Infrastructure.Persistence.Configurations
             builder.Property(employee => employee.DeletedBy)
                .HasDefaultValue(null);
 
+            builder.HasQueryFilter(employee => employee.IsDeleted == false);
+
             // Seed demo data
             builder.HasData(new HashSet<Employee>
             {
