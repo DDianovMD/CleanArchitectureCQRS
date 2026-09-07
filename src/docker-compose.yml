@@ -1,0 +1,30 @@
+services:
+    database:
+        image: mariadb:11.4
+        container_name: clean_architecture_demo_database
+        restart: always
+        environment:
+            MARIADB_ROOT_PASSWORD: admin # Change this password before deploying to production.
+            MARIADB_DATABASE: CleanArchitectureDemoDb
+            MARIADB_USER: admin
+            MARIADB_PASSWORD: admin # Change this password before deploying to production.
+        volumes:
+            - clean_architecture_demo_data:/var/lib/mysql
+        healthcheck:
+            test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+            interval: 3s
+            timeout: 3s
+            retries: 5
+        networks:
+            - backend
+        ports:
+            - "3307:3306"
+
+volumes:
+    clean_architecture_demo_data:
+        name: clean_architecture_demo_data
+
+networks:
+    backend:
+        name: backend
+        driver: bridge
