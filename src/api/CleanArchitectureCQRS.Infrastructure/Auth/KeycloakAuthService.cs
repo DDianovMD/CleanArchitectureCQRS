@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 
-namespace CleanArchitectureCQRS.Infrastructure.Keycloak
+namespace CleanArchitectureCQRS.Infrastructure.Auth
 {
     public class KeycloakAuthService(HttpClient httpClient, IConfiguration configuration)
     {

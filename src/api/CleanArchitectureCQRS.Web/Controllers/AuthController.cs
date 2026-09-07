@@ -1,5 +1,5 @@
 ﻿using CleanArchitectureCQRS.Domain.Auth;
-using CleanArchitectureCQRS.Infrastructure.Keycloak;
+using CleanArchitectureCQRS.Infrastructure.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

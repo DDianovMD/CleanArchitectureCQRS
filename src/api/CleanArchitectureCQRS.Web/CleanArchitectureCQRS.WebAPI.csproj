@@ -17,9 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CleanArchitecture.Application\CleanArchitectureCQRS.Application.csproj" />
-    <ProjectReference Include="..\CleanArchitecture.Infrastructure\CleanArchitectureCQRS.Infrastructure.csproj" />
+    <ProjectReference Include="..\CleanArchitectureCQRS.Application\CleanArchitectureCQRS.Application.csproj" />
     <ProjectReference Include="..\CleanArchitectureCQRS.Domain\CleanArchitectureCQRS.Domain.csproj" />
+    <ProjectReference Include="..\CleanArchitectureCQRS.Infrastructure\CleanArchitectureCQRS.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

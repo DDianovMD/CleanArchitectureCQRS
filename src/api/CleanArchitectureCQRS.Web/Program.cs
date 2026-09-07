@@ -1,7 +1,6 @@
-
 using CleanArchitectureCQRS.Application.UseCases.Employee.Handlers;
 using CleanArchitectureCQRS.Domain.Abstractions.Repositories;
-using CleanArchitectureCQRS.Infrastructure.Keycloak;
+using CleanArchitectureCQRS.Infrastructure.Auth;
 using CleanArchitectureCQRS.Infrastructure.Persistence;
 using CleanArchitectureCQRS.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
