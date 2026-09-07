@@ -5,6 +5,7 @@ import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import NotFoundPage from './pages/not-found/not-found.tsx'
 import EmployeesPage from './pages/employees/employees.tsx'
+import Login from './pages/login/login.tsx'
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         path: "employees",
         element: <EmployeesPage />,
+      },
+      {
+        path: "login",
+        element: <Login />,
       },
     ],
   },

@@ -75,11 +75,12 @@ namespace CleanArchitectureCQRS.WebAPI
             // Add services to the container.
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowKeycloak", policy =>
+                options.AddPolicy("AllowLocalHost", policy =>
                 {
-                    policy.WithOrigins("http://localhost:8888") // Keycloak server URL
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                    policy.WithOrigins("http://localhost:8888", "http://localhost:5173") // Keycloak server URL and React app
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                 });
             });
 
@@ -150,13 +151,11 @@ namespace CleanArchitectureCQRS.WebAPI
             }
 
             app.UseHttpsRedirection();
-
+            app.UseRouting();
+            app.UseCors("AllowLocalHost");
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }
