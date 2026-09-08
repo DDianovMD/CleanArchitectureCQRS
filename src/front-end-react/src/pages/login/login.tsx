@@ -8,6 +8,7 @@ import { Button } from 'primereact/button';
 import { Message } from 'primereact/message';
 import axiosInstance from '../../services/ApiService';
 import { FloatLabel } from 'primereact/floatlabel';
+import useAuth from '../../hooks/useAuth';
 
 interface LoginResponse {
   "access_token": string;
@@ -15,6 +16,14 @@ interface LoginResponse {
 }
 
 export default function Login(): JSX.Element {
+  const { user, isAuthenticated, login } = useAuth();
+
+  if (isAuthenticated) {
+    return <>
+      <p>You are already logged in as {user?.preferred_username}. Please log out first to log in with a different account.</p>
+    </>
+  }
+
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -34,10 +43,7 @@ export default function Login(): JSX.Element {
       });
 
       const { access_token, refresh_token } = response.data;
-      console.log(response.data)
-      // Save tokens
-      localStorage.setItem('accessToken', access_token);
-      localStorage.setItem('refreshToken', refresh_token);
+      login(access_token, refresh_token);
 
       // Redirect to dashboard or home page
       navigate('/');

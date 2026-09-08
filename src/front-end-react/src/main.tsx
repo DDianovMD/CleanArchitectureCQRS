@@ -1,11 +1,12 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import NotFoundPage from './pages/not-found/not-found.tsx'
-import EmployeesPage from './pages/employees/employees.tsx'
-import Login from './pages/login/login.tsx'
+import './index.css';
+import App from './App.tsx';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import NotFoundPage from './pages/not-found/not-found.tsx';
+import EmployeesPage from './pages/employees/employees.tsx';
+import Login from './pages/login/login.tsx';
+import Logout from './pages/logout/logout.tsx';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
         path: "login",
         element: <Login />,
       },
+      {
+        path: "logout",
+        element: <Logout />,
+      }
     ],
   },
 ]);

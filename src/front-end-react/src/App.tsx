@@ -5,6 +5,7 @@ import 'primereact/resources/primereact.min.css';
 import type { JSX } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { PrimeReactProvider } from 'primereact/api';
+import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar/Navbar';
 
 export default function App(): JSX.Element {
@@ -13,15 +14,17 @@ export default function App(): JSX.Element {
   return (
     <>
       <PrimeReactProvider>
-        <Navbar />
-        <main>
-          {
-            location && location.pathname === '/'
-              ? <div>Simple front end application for demo purposes.</div>
-              : <Outlet />
-          }
-        </main>
-        <footer></footer>
+        <AuthProvider>
+          <Navbar />
+          <main>
+            {
+              location && location.pathname === '/'
+                ? <div>Simple front end application for demo purposes.</div>
+                : <Outlet />
+            }
+          </main>
+          <footer></footer>
+        </AuthProvider>
       </PrimeReactProvider>
     </>
   )

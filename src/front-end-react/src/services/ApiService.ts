@@ -1,5 +1,6 @@
 import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import axios, { AxiosError } from 'axios';
+import AuthService from './AuthService';
 
 // Extend AxiosRequestConfig to track retry state
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
@@ -39,7 +40,7 @@ const processQueue = (error: Error | null, token: string | null = null) => {
 // Request Interceptor: Attach access token
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token: string | null = localStorage.getItem('accessToken');
+    const token: string | null = AuthService.getAccessToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -75,16 +76,16 @@ axiosInstance.interceptors.response.use(
 
       try {
         // Call backend refresh endpoint
-        const refreshToken: string | null = localStorage.getItem('refreshToken');
+        const refreshToken: string | null = AuthService.getRefreshToken();
         const refreshPayload: { refreshToken: string | null } = { refreshToken };
         const response = await axios.post(refreshUrl, refreshPayload);
 
         const { accessToken, newRefreshToken } = response.data;
 
         // Save new credentials
-        localStorage.setItem('accessToken', accessToken);
+        AuthService.saveAccessToken(accessToken);
         if (newRefreshToken) {
-          localStorage.setItem('refreshToken', newRefreshToken);
+          AuthService.saveRefreshToken(newRefreshToken);
         }
 
         const authHeader: string = `Bearer ${accessToken}`;
@@ -101,7 +102,7 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         // Refresh failed (e.g., refresh token expired) -> force logout
         processQueue(refreshError as Error, null);
-        localStorage.clear();
+        AuthService.deleteTokens();
         window.location.href = '/login';
         return Promise.reject(refreshError);
       } finally {
