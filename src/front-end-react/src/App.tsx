@@ -7,6 +7,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { PrimeReactProvider } from 'primereact/api';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar/Navbar';
+import Homepage from './pages/homepage/homepage';
 
 export default function App(): JSX.Element {
   const location = useLocation();
@@ -19,7 +20,7 @@ export default function App(): JSX.Element {
           <main>
             {
               location && location.pathname === '/'
-                ? <div>Simple front end application for demo purposes.</div>
+                ? <Homepage />
                 : <Outlet />
             }
           </main>
