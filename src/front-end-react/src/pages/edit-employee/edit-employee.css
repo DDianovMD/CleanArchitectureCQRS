@@ -1,0 +1,26 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+form.edit-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  row-gap: 35px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.save-btn {
+  margin-bottom: 50px;
+}
+
+.invalid-field {
+  color: red;
+}
