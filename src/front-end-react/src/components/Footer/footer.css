@@ -1,0 +1,27 @@
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb;
+  border-top: 1px solid lightgray;
+  font-size: 18px;
+}
+
+.contacts-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar {
+  cursor: pointer;
+}
+
+
+.contacts-container>span,
+.avatar:nth-child(2),
+.avatar:nth-child(3) {
+  margin-right: 20px;
+}
