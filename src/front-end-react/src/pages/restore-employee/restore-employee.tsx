@@ -8,6 +8,7 @@ import AuthService from '../../services/AuthService';
 import { Button } from 'primereact/button';
 import useAuth from '../../hooks/useAuth';
 import { Toast } from 'primereact/toast';
+import AccessDenied from '../access-denied/access-denied';
 
 export default function RestoreEmployee(): JSX.Element {
   const { user, isAuthenticated } = useAuth();
@@ -15,7 +16,7 @@ export default function RestoreEmployee(): JSX.Element {
   const toast = useRef<Toast>(null);
 
   if (!user && isAuthenticated == false || !AuthService.isAdmin(user!)) {
-    return <>Access denied!</>
+    return <AccessDenied />
   }
 
   const [deletedEmployees, setDeletedEmployees] = useState<Array<Employee>>([]);

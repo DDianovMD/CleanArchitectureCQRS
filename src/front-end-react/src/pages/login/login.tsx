@@ -1,5 +1,5 @@
 import './login.css';
-import React, { useState, type JSX } from 'react';
+import React, { useEffect, useState, type JSX } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router-dom';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
@@ -17,19 +17,19 @@ interface LoginResponse {
 
 export default function Login(): JSX.Element {
   const { user, isAuthenticated, login } = useAuth();
+  const navigate: NavigateFunction = useNavigate();
 
   if (isAuthenticated) {
-    return <>
-      <p>You are already logged in as {user?.preferred_username}. Please log out first to log in with a different account.</p>
-    </>
+    return <div className='form-container'>
+      <p>You are already logged in as <b>{user?.preferred_username}</b>. Please log out first to log in with a different account.</p>
+      <Button label='Logout' icon='pi pi-sign-out' onClick={() => navigate('/logout')} />
+    </div>
   }
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
-  const navigate: NavigateFunction = useNavigate();
 
   const handleLogin = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -45,7 +45,7 @@ export default function Login(): JSX.Element {
       const { access_token, refresh_token } = response.data;
       login(access_token, refresh_token);
 
-      // Redirect to dashboard or home page
+      // Redirect to home page
       navigate('/');
     } catch (err: any) {
       setError(

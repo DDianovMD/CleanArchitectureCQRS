@@ -9,6 +9,9 @@ import { Button } from 'primereact/button';
 import { PrimeIcons } from 'primereact/api';
 import axiosInstance from "../../services/ApiService";
 import { Toast } from 'primereact/toast';
+import useAuth from '../../hooks/useAuth';
+import AccessDenied from '../access-denied/access-denied';
+import AuthService from '../../services/AuthService';
 
 type InputFields = 'firstName' | 'lastName' | 'address';
 interface ValidationResult {
@@ -18,6 +21,12 @@ interface ValidationResult {
 }
 
 export default function AddEditEmployee(): JSX.Element {
+  const { user, isAuthenticated } = useAuth();
+
+  if (!user && isAuthenticated == false || !AuthService.isAdmin(user!)) {
+    return <AccessDenied />
+  }
+
   const location = useLocation();
   const isEditPage: boolean = location.pathname === '/admin/edit-employee';
   let employee: Employee = {} as Employee;

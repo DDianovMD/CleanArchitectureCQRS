@@ -4,13 +4,14 @@ import { useNavigate, type NavigateFunction } from 'react-router-dom';
 import { Card } from 'primereact/card';
 import useAuth from '../../hooks/useAuth';
 import AuthService from '../../services/AuthService';
+import AccessDenied from '../access-denied/access-denied';
 
 export default function AdminPanel(): JSX.Element {
   const { user, isAuthenticated } = useAuth();
   const navigate: NavigateFunction = useNavigate();
 
   if (!user && isAuthenticated == false || !AuthService.isAdmin(user!)) {
-    return <>Access denied!</>
+    return <AccessDenied />
   }
 
   const addUser: JSX.Element = <p>Add user</p>;

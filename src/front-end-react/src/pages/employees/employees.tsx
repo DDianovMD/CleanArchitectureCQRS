@@ -9,6 +9,7 @@ import { ContextMenu } from "primereact/contextmenu";
 import { Toast } from "primereact/toast";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 export default function EmployeesPage(): JSX.Element {
   const { user, isAuthenticated } = useAuth();
@@ -63,29 +64,38 @@ export default function EmployeesPage(): JSX.Element {
       return;
     }
 
-    try {
-      const deleteResponse = await axiosInstance.delete(`/employee/${employee?.id}`);
+    confirmDialog({
+      message: 'Are you sure you want to proceed?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      defaultFocus: 'accept',
+      accept: async () => {
+        try {
+          const deleteResponse = await axiosInstance.delete(`/employee/${employee?.id}`);
 
-      if (deleteResponse.status === 204) { // No content
-        setEmployees((previous: Array<Employee>) => {
-          return previous.filter(entity => entity.id !== employee?.id);
-        });
+          if (deleteResponse.status === 204) { // No content
+            setEmployees((previous: Array<Employee>) => {
+              return previous.filter(entity => entity.id !== employee?.id);
+            });
 
-        toast?.current?.show({
-          severity: 'success',
-          summary: 'Success',
-          detail: `User ${employee?.firstName} ${employee?.lastName} deleted successfully.`,
-          life: 3000,
-        });
-      }
-    } catch (error) {
-      toast?.current?.show({
-        severity: 'error',
-        summary: 'Error!',
-        detail: `Unexpected error occurred. Please try again later.`,
-        life: 3000,
-      });
-    }
+            toast?.current?.show({
+              severity: 'success',
+              summary: 'Success',
+              detail: `User ${employee?.firstName} ${employee?.lastName} deleted successfully.`,
+              life: 3000,
+            });
+          }
+        } catch (error) {
+          toast?.current?.show({
+            severity: 'error',
+            summary: 'Error!',
+            detail: `Unexpected error occurred. Please try again later.`,
+            life: 3000,
+          });
+        }
+      },
+      reject: () => { }
+    });
   };
 
   async function fetchEmployees(): Promise<void> {
@@ -123,6 +133,7 @@ export default function EmployeesPage(): JSX.Element {
     {
       !loading && <>
         <Toast ref={toast} />
+        <ConfirmDialog />
         <ContextMenu model={menuModel} ref={contextMenu} onHide={() => setSelectedEmployee(null)} />
         <DataTable value={employees} stripedRows tableStyle={{ minWidth: '50rem' }}
           onContextMenu={(e) => contextMenu.current?.show(e.originalEvent)}

@@ -1,14 +1,25 @@
-import { useEffect, type JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 import useAuth from "../../hooks/useAuth";
+import NotFoundPage from "../not-found/not-found";
 
 export default function Logout(): JSX.Element {
-  const { logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
+  const [shouldLogOut, setShouldLogOut] = useState<boolean>(user !== null);
 
   useEffect(() => {
-    logout();
+    if (user !== null) {
+      logout();
+    }
   }, []);
 
   return <>
-    <p>You have been logged out successfully. See you next time!</p>
+    {
+      shouldLogOut && !isAuthenticated && <div className="flex-column-center" style={{ minHeight: '70vh' }}>
+        <p>You have been logged out successfully. See you next time!</p>
+      </div >
+    }
+    {
+      !shouldLogOut && <NotFoundPage />
+    }
   </>
 }
