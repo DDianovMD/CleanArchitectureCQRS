@@ -1,5 +1,5 @@
 import './edit-employee.css';
-import { useEffect, useState, type JSX } from 'react';
+import { useEffect, useRef, useState, type JSX, type RefObject } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Employee } from '../../interfaces/Employee';
 import { FloatLabel } from 'primereact/floatlabel';
@@ -7,6 +7,8 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 import { PrimeIcons } from 'primereact/api';
+import axiosInstance from "../../services/ApiService";
+import { Toast } from 'primereact/toast';
 
 type InputFields = 'firstName' | 'lastName' | 'address';
 interface ValidationResult {
@@ -18,6 +20,8 @@ interface ValidationResult {
 export default function EditEmployee(): JSX.Element {
   const location = useLocation();
   const employee: Employee = (location as any).state.employee;
+  const toast: RefObject<Toast | null> = useRef<Toast>(null);
+
   const invalidMinLength: string = "Min length is 3 symbols.";
   const invalidMaxLength: string = "Max length is 100 symbols.";
   const invalidAddressMaxLength: string = "Max length is 200 symbols.";
@@ -92,15 +96,39 @@ export default function EditEmployee(): JSX.Element {
     }
   }
 
-  function handleSave(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+  async function handleSave(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
     if (validationResult.isFirstNameValid === false ||
       validationResult.isLastNameValid === false ||
       validationResult.isAddressValid === false) {
       return;
     }
 
-    // TODO: Send request to back end and save new values.
-    // Show success toast afterward.
+    const payload: Employee = {
+      id: employee.id,
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+    }
+
+    try {
+      const response = await axiosInstance.put('/employee', payload);
+
+      if (response.status === 204) {
+        toast?.current?.show({
+          severity: 'success',
+          summary: 'Success',
+          detail: `Changes saved successfully.`,
+          life: 3000,
+        });
+      }
+    } catch (error) {
+      toast?.current?.show({
+        severity: 'error',
+        summary: 'Error!',
+        detail: `Unexpected error occurred. Please try again later.`,
+        life: 3000,
+      });
+    }
   }
 
   useEffect(() => {
@@ -117,6 +145,7 @@ export default function EditEmployee(): JSX.Element {
 
   return <>
     <h1>Edit employee</h1>
+    <Toast ref={toast} />
     <form className='edit-form'>
       <div className="form-group">
         <FloatLabel>

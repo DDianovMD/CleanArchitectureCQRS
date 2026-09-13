@@ -40,7 +40,7 @@ namespace CleanArchitectureCQRS.WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> CreateEmployee(UpdateEmployeeCommand request, CancellationToken ct)
+        public async Task<IActionResult> UpdateEmployee(UpdateEmployeeCommand request, CancellationToken ct)
         {
             await _mediator.Send(request, ct);
             return NoContent();
