@@ -1,11 +1,13 @@
 # Summary
-Skeleton project following clean architecture and CQRS pattern.
+Skeleton project following clean architecture and CQRS pattern. 
+See demo on [YouTube](https://www.youtube.com/watch?v=lIRdHNxWq0s).
 
 ## How to start the project
 
 ### Prerequisites
 - [x] Installed and running **Docker** instance.
-- [x] Ports **3307** (mapped to 3306 inside MariaDB's container), **8888** (mapped to 8080 inside Keycloak's container), **7148** (runs the application on this port) on your machine shouldn't be in use.
+- [x] Installed NodeJS v22.17.0 or later version.
+- [x] Ports **3307** (mapped to 3306 inside MariaDB's container), **8888** (mapped to 8080 inside Keycloak's container), **7148** (runs the back end application on this port) and **5173** (running React front end on this port) on your machine shouldn't be in use.
 
 ### Instructions
 1. Clone repository locally.
@@ -19,3 +21,11 @@ Skeleton project following clean architecture and CQRS pattern.
 6. Update ClientSecret of Keycloak section inside `appsettings.Development.json` file. Correct value should be copied from **Credentials** of created Client from previous step.
 7. Start the project from `Visual Studio` or using `dotnet run CleanArchitectureCQRS.WebAPI` (if you prefer using *dotnet CLI* first you should navigate inside `repo/src/api/CleanArchitectureCQRS.Web/` directory where `CleanArchitectureCQRS.WebAPI.csproj` is located.
 8. Open `https://localhost:7148/swagger/index.html`.
+
+### How to start React front end
+1. Navigate to `repo/src/front-end-react`.
+2. Open terminal and execute `npm install --verbose`.
+3. Run `npm run dev`.
+4. Open `http://localhost:5173`. In case the application is not visible, check the output of previous command to see if application is not running on different port. You should see the correct address.
+
+**Note: React application is working with the project inside `/api` folder. Ensure all previous steps are completed if you encounter any errors - you should have running Docker containers with database, configured Keycloak and running back end API.**
