@@ -53,5 +53,19 @@ namespace CleanArchitectureCQRS.WebAPI.Controllers
             await _mediator.Send(command, ct);
             return NoContent();
         }
+
+        [HttpGet("deleted")]
+        public async Task<IActionResult> GetSoftDeletedEmployees(CancellationToken ct)
+        {
+            var response = await _mediator.Send(new GetSoftDeletedEmployeesQuery(), ct);
+            return Ok(response);
+        }
+
+        [HttpPut("restore")]
+        public async Task<IActionResult> RestoreEmployee(RestoreEmployeeCommand request, CancellationToken ct)
+        {
+            await mediator.Send(request, ct);
+            return Ok();
+        }
     }
 }
