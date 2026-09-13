@@ -8,7 +8,7 @@ import EmployeesPage from './pages/employees/employees.tsx';
 import Login from './pages/login/login.tsx';
 import Logout from './pages/logout/logout.tsx';
 import AdminPanel from './pages/admin/admin-panel.tsx';
-import AddEditEmployee from './pages/edit-employee/edit-employee.tsx';
+import AddEditEmployee from './pages/add-edit-employee/add-edit-employee.tsx';
 
 const router = createBrowserRouter([
   {
