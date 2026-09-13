@@ -6,6 +6,10 @@
   font-size: 18px;
 }
 
+.homepage-container>p {
+  padding-left: 40px;
+}
+
 .icon {
   color: green;
   margin-right: 8px;
@@ -49,5 +53,11 @@ section.skills {
   100% {
     opacity: 1;
     /* Fully visible again */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .technologies>div {
+    flex-wrap: wrap;
   }
 }
