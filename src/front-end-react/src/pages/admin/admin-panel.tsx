@@ -9,7 +9,6 @@ export default function AdminPanel(): JSX.Element {
   const { user, isAuthenticated } = useAuth();
   const navigate: NavigateFunction = useNavigate();
 
-  console.log(user);
   if (!user && isAuthenticated == false || !AuthService.isAdmin(user!)) {
     return <>Access denied!</>
   }
