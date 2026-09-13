@@ -7,7 +7,8 @@ import NotFoundPage from './pages/not-found/not-found.tsx';
 import EmployeesPage from './pages/employees/employees.tsx';
 import Login from './pages/login/login.tsx';
 import Logout from './pages/logout/logout.tsx';
-import EditEmployee from './pages/edit-employee/edit-employee.tsx';
+import AdminPanel from './pages/admin/admin-panel.tsx';
+import AddEditEmployee from './pages/edit-employee/edit-employee.tsx';
 
 const router = createBrowserRouter([
   {
@@ -28,8 +29,16 @@ const router = createBrowserRouter([
         element: <Logout />,
       },
       {
+        path: "admin/",
+        element: <AdminPanel />,
+      },
+      {
+        path: "admin/add-employee",
+        element: <AddEditEmployee />,
+      },
+      {
         path: "admin/edit-employee",
-        element: <EditEmployee />,
+        element: <AddEditEmployee />,
       }
     ],
   },

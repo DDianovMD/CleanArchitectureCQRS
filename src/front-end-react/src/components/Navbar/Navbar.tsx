@@ -4,9 +4,10 @@ import { Menubar } from 'primereact/menubar';
 import useAuth from '../../hooks/useAuth';
 import NavbarEnd from "../NavbarEnd/NavbarEnd";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
+import AuthService from "../../services/AuthService";
 
 export default function Navbar(): JSX.Element {
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate: NavigateFunction = useNavigate();
   const defaultItems: Array<MenuItem> = [
     {
@@ -31,11 +32,21 @@ export default function Navbar(): JSX.Element {
         command: () => navigate('/login'),
       }]);
     } else {
-      setItems([...defaultItems, {
+      const links = [{
         label: 'Logout',
         icon: 'pi pi-sign-out',
         command: () => navigate('/logout'),
-      }]);
+      }]
+
+      if (AuthService.isAdmin(user)) {
+        links.unshift({
+          label: 'Admin panel',
+          icon: 'pi pi-sign-out',
+          command: () => navigate('/admin'),
+        });
+      }
+
+      setItems([...defaultItems, ...links]);
     }
   }, [isAuthenticated]);
 

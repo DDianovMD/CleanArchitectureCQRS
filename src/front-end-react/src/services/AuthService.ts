@@ -41,5 +41,13 @@ export default abstract class AuthService {
     localStorage.removeItem(this.accessTokenKey);
     localStorage.removeItem(this.refreshTokenKey);
   }
+
+  static isAdmin(user: CustomJwtPayload | null): boolean {
+    if (!user) {
+      return false;
+    } else {
+      return user.roles.some(role => role === 'admin');
+    }
+  }
 }
 

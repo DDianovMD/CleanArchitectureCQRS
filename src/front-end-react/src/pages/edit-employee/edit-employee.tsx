@@ -17,18 +17,25 @@ interface ValidationResult {
   isAddressValid: boolean;
 }
 
-export default function EditEmployee(): JSX.Element {
+export default function AddEditEmployee(): JSX.Element {
   const location = useLocation();
-  const employee: Employee = (location as any).state.employee;
+  const isEditPage: boolean = location.pathname === '/admin/edit-employee';
+  let employee: Employee = {} as Employee;
+
+  if (isEditPage) {
+    employee = (location as any).state.employee;
+  }
+
   const toast: RefObject<Toast | null> = useRef<Toast>(null);
 
   const invalidMinLength: string = "Min length is 3 symbols.";
   const invalidMaxLength: string = "Max length is 100 symbols.";
   const invalidAddressMaxLength: string = "Max length is 200 symbols.";
 
-  const [firstName, setFirstName] = useState<string>(employee.firstName);
-  const [lastName, setLastName] = useState<string>(employee.lastName);
-  const [address, setAddress] = useState<string>(employee.address);
+  const [userHasChangedInput, setUserHasChangedInput] = useState<boolean>(false);
+  const [firstName, setFirstName] = useState<string>(employee.firstName ?? "");
+  const [lastName, setLastName] = useState<string>(employee.lastName ?? "");
+  const [address, setAddress] = useState<string>(employee.address ?? "");
 
   const validationResultDefault: ValidationResult = {
     isFirstNameValid: true,
@@ -96,7 +103,49 @@ export default function EditEmployee(): JSX.Element {
     }
   }
 
-  async function handleSave(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
+  function showErrorToast(): void {
+    toast?.current?.show({
+      severity: 'error',
+      summary: 'Error!',
+      detail: `Unexpected error occurred. Please try again later.`,
+      life: 3000,
+    });
+  }
+
+  function showSuccessToast(message: string): void {
+    toast?.current?.show({
+      severity: 'success',
+      summary: 'Success',
+      detail: message,
+      life: 3000,
+    });
+  }
+
+  async function editEmployee(payload: Employee) {
+    try {
+      const response = await axiosInstance.put('/employee', payload);
+
+      if (response.status === 204) {
+        showSuccessToast(`Changes saved successfully.`);
+      }
+    } catch (error) {
+      showErrorToast();
+    }
+  }
+
+  async function addEmployee(payload: Employee) {
+    try {
+      const response = await axiosInstance.post('/employee', payload);
+
+      if (response.status === 201) {
+        showSuccessToast(`Employee ${payload.firstName} ${payload.lastName} added successfully.`);
+      }
+    } catch (error) {
+      showErrorToast();
+    }
+  }
+
+  async function handleSave(_: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
     if (validationResult.isFirstNameValid === false ||
       validationResult.isLastNameValid === false ||
       validationResult.isAddressValid === false) {
@@ -104,47 +153,40 @@ export default function EditEmployee(): JSX.Element {
     }
 
     const payload: Employee = {
-      id: employee.id,
+      id: isEditPage ? employee.id : "",
       firstName: firstName,
       lastName: lastName,
       address: address,
     }
 
-    try {
-      const response = await axiosInstance.put('/employee', payload);
-
-      if (response.status === 204) {
-        toast?.current?.show({
-          severity: 'success',
-          summary: 'Success',
-          detail: `Changes saved successfully.`,
-          life: 3000,
-        });
-      }
-    } catch (error) {
-      toast?.current?.show({
-        severity: 'error',
-        summary: 'Error!',
-        detail: `Unexpected error occurred. Please try again later.`,
-        life: 3000,
-      });
+    if (isEditPage) {
+      await editEmployee(payload);
+    }
+    else {
+      await addEmployee(payload);
     }
   }
 
   useEffect(() => {
-    validate('firstName')
+    if (userHasChangedInput) {
+      validate('firstName')
+    }
   }, [firstName]);
 
   useEffect(() => {
-    validate('lastName')
+    if (userHasChangedInput) {
+      validate('lastName')
+    }
   }, [lastName]);
 
   useEffect(() => {
-    validate('address')
+    if (userHasChangedInput) {
+      validate('address')
+    }
   }, [address]);
 
   return <>
-    <h1>Edit employee</h1>
+    <h1>{isEditPage ? 'Edit' : 'Add'} employee</h1>
     <Toast ref={toast} />
     <form className='edit-form'>
       <div className="form-group">
@@ -154,6 +196,7 @@ export default function EditEmployee(): JSX.Element {
             className='p-inputtext-lg'
             value={firstName}
             onChange={(e) => {
+              setUserHasChangedInput(true);
               setFirstName((_ => {
                 return e.target.value;
               }))
@@ -179,6 +222,7 @@ export default function EditEmployee(): JSX.Element {
             className='p-inputtext-lg'
             value={lastName}
             onChange={(e) => {
+              setUserHasChangedInput(true);
               setLastName((_ => {
                 return e.target.value;
               }))
@@ -202,6 +246,7 @@ export default function EditEmployee(): JSX.Element {
           <InputTextarea id="address"
             value={address}
             onChange={(e) => {
+              setUserHasChangedInput(true);
               setAddress(_ => {
                 return e.target.value;
               })
@@ -216,10 +261,10 @@ export default function EditEmployee(): JSX.Element {
         {!validationResult.isAddressValid &&
           <p className='invalid-field'>
             {
-              address.length > 200
-                ? invalidAddressMaxLength
-                : ""
-            }
+              address.length < 3
+                ? invalidMinLength
+                : address.length > 200
+                  ? invalidAddressMaxLength : ""}
           </p>
         }
       </div>

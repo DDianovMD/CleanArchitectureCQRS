@@ -3,7 +3,8 @@ export interface CustomJwtPayload {
   email?: string;               // Email
   preferred_username?: string;  // Keycloak username
   realm_access?: {              // Keycloak Roles
-    roles: string[];
+    roles: Array<string>;
   };
   exp?: number;                 // Expiration timestamp
+  roles: Array<string>;   
 }
