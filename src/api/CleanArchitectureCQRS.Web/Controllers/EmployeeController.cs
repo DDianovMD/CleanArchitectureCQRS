@@ -40,7 +40,7 @@ namespace CleanArchitectureCQRS.WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> CreateEmployee(UpdateEmployeeCommand request, CancellationToken ct)
+        public async Task<IActionResult> UpdateEmployee(UpdateEmployeeCommand request, CancellationToken ct)
         {
             await _mediator.Send(request, ct);
             return NoContent();
@@ -52,6 +52,20 @@ namespace CleanArchitectureCQRS.WebAPI.Controllers
             var command = new DeleteEmployeeCommand(id);
             await _mediator.Send(command, ct);
             return NoContent();
+        }
+
+        [HttpGet("deleted")]
+        public async Task<IActionResult> GetSoftDeletedEmployees(CancellationToken ct)
+        {
+            var response = await _mediator.Send(new GetSoftDeletedEmployeesQuery(), ct);
+            return Ok(response);
+        }
+
+        [HttpPut("restore")]
+        public async Task<IActionResult> RestoreEmployee(RestoreEmployeeCommand request, CancellationToken ct)
+        {
+            await mediator.Send(request, ct);
+            return Ok();
         }
     }
 }

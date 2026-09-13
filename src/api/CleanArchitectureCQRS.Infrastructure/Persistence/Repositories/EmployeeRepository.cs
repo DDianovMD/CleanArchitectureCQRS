@@ -60,5 +60,43 @@ namespace CleanArchitectureCQRS.Infrastructure.Persistence.Repositories
 
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Employee>> GetSoftDeletedEmployeesAsync()
+        {
+            var employees = await dbContext.Employees
+                .AsNoTracking()
+                .IgnoreQueryFilters()
+                .Where(employee => employee.IsDeleted == true)
+                .ToArrayAsync();
+
+            return employees;
+        }
+
+        public async Task RestoreEmployeeAsync(Guid id, string user)
+        {
+            var employee = await GetDeletedEmployeeAsync(id);
+            
+            if (employee == null)
+            {
+                return;
+            }
+
+            employee.IsDeleted = false;
+            employee.DeletedOn = null;
+            employee.DeletedBy = null;
+            employee.LastModifedBy = user;
+            employee.LastModifiedOn = DateTimeOffset.UtcNow;
+
+            await dbContext.SaveChangesAsync();
+        }
+
+        private async Task<Employee?> GetDeletedEmployeeAsync(Guid id)
+        {
+            var employee = await dbContext.Employees
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(employee => employee.Id == id && employee.IsDeleted == true);
+
+            return employee;
+        }
     }
 }

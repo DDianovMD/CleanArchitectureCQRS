@@ -1,0 +1,25 @@
+.admin-panel-container {
+  min-height: 70vh;
+  gap: 2rem;
+}
+
+.card {
+  min-width: 250px;
+  min-height: 200px;
+}
+
+.card:hover {
+  background-color: aliceblue;
+  cursor: pointer;
+}
+
+.card-icon {
+  color: green;
+  font-size: 40px;
+}
+
+@media screen and (max-width: 768px) {
+  .admin-panel-container {
+    flex-direction: column;
+  }
+}
